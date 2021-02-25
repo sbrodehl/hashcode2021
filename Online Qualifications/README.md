@@ -49,7 +49,8 @@ The input files can be found in [`input/`](input)
 
 ## Scores
 
-Overall **9,092,476** points.
+Overall **9,092,476** points (2123st place).
+See the complete scoreboard [here](hashcode_2021_online_qualifications_scoreboard.zip).
 
 #### A – An example
 
