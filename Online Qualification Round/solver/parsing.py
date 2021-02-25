@@ -2,6 +2,8 @@ import logging
 
 from .street import Street
 from .car import Car
+from .intersection import Intersection
+from .schedule import Schedule
 
 
 LOGGER = logging.getLogger(__name__)
@@ -16,9 +18,11 @@ def parse_input(file_in):
     LOGGER.info("Parsing file '{}'".format(file_in))
     streets = {}
     cars = []
+    intersections = None
     with open(file_in, 'r') as fp:
         # read META data
-        d, i, s, v, f = list(map(int, list( fp.readline().strip().split(" "))))
+        d, i, s, v, f = list(map(int, list(fp.readline().strip().split(" "))))
+        intersections = [Intersection(idx) for idx in range(i)]
 
         # read all STREETS
         for street_id in range(s):
@@ -26,6 +30,8 @@ def parse_input(file_in):
             b, e = list(map(int, l_[:2]))
             name, l = l_[2], int(l_[3])
             streets[name] = Street(street_id, b, e, name, l)
+            intersections[b].add_outgoing(streets[name])
+            intersections[e].add_incoming(streets[name])
 
         assert len(streets) == s
 
@@ -41,7 +47,7 @@ def parse_input(file_in):
 
     LOGGER.info(f"Read {len(cars)} cars and {len(streets)} streets.")
     LOGGER.info("Parsing '{}' - Done!".format(file_in))
-    return streets, cars
+    return (d, i, s, v, f), streets, cars, intersections
 
 
 def parse_output(file_out, problem_set):
@@ -54,22 +60,29 @@ def parse_output(file_out, problem_set):
     LOGGER.info("Parsing '{}'".format(file_out))
     solution = []
     with open(file_out, 'r') as f:
-        first_line = f.readline().strip()
-        print(first_line)
+        intersections = int(f.readline().strip())
 
-        lid = -1
-        for lid, line in enumerate(f.readlines()):
-            l_ = list(map(int, line.strip().split(' ')))
-
-        print(f"Read {lid} additional lines.")
+        for idx in range(intersections):
+            intersection_id = int(f.readline().strip())
+            incoming_streets = int(f.readline().strip())
+            order = []
+            covered_streets = []
+            for street_idx in range(incoming_streets):
+                street_name, duration = f.readline().strip().split()
+                order.append((int(duration), street_name))
+                covered_streets.append(street_name)
+            solution.append(Schedule(intersection_id, covered_streets, order))
 
     LOGGER.info("Parsing '{}' - Done!".format(file_out))
     return solution
 
 
-def write_output(file_out, solution):
+def write_output(file_out, solution: list[Schedule]):
     LOGGER.debug("Writing solution '{}'".format(file_out))
     with open(file_out, 'w') as f:
         f.write("{}\n".format(str(len(solution))))
         for s in solution:
-            f.write(f"{s}\n")
+            f.write(f"{s.intersection_id}\n")
+            f.write(f"{len(s.streets_covered)}\n")
+            for sec, street_name in s.order:
+                f.write(f"{street_name} {sec}\n")
