@@ -13,7 +13,7 @@ def parse_input(file_in):
     :param file_in: input file name
     :return: (m, t2, t3, t4), available_pizzas
     """
-    LOGGER.debug("Parsing file '{}'".format(file_in))
+    LOGGER.info("Parsing file '{}'".format(file_in))
     available_pizzas = []
     with open(file_in, 'r') as f:
         first_line = f.readline().strip()
@@ -23,15 +23,20 @@ def parse_input(file_in):
         t3 = l_[2]  # (0 ≤ T3 ≤ 50.000) - the number of 3-person teams
         t4 = l_[3]  # (0 ≤ T4 ≤ 50.000) - the number of 4-person teams
 
+        unique_i = set()
         for pid, line in enumerate(f.readlines()):
             _split = line.strip().split(' ')
             ingredients = set(_split[1:])  # (1 ≤ I ≤ 10.000) - the number of ingredients
             assert len(ingredients) == int(_split[0])
             available_pizzas.append(Pizza(pid, ingredients))
+            unique_i.update(ingredients)
 
         assert pid + 1 == m
-
-    LOGGER.debug("Parsing '{}' - Done!".format(file_in))
+    LOGGER.info("Parsing '{}' - Done!".format(file_in))
+    LOGGER.info(f"Pizzas: {m} with {len(unique_i)} unique ingredients.\n"
+                f"2-person teams: {t2}\n"
+                f"3-person teams: {t3}\n"
+                f"4-person teams: {t4}")
     return m, collections.OrderedDict({4: t4, 3: t3, 2: t2}), available_pizzas
 
 
@@ -42,7 +47,7 @@ def parse_output(file_out, problem_set):
     :param problem_set: input problem set
     :return: n, deliveries
     """
-    LOGGER.debug("Parsing '{}'".format(file_out))
+    LOGGER.info("Parsing '{}'".format(file_out))
     solution = []
     with open(file_out, 'r') as f:
         first_line = f.readline().strip()
@@ -56,7 +61,7 @@ def parse_output(file_out, problem_set):
         # check read amount of deliveries
         assert did + 1 == deliveries
 
-    LOGGER.debug("Parsing '{}' - Done!".format(file_out))
+    LOGGER.info("Parsing '{}' - Done!".format(file_out))
     return solution
 
 
