@@ -55,7 +55,7 @@ class Heuristics(BaseSolver):
             visits = {name: streets[name].visits for name in intersection.incoming if streets[name].visits > 0}
             duration = {k: int(d * v / sum(visits.values())) for k, v in visits.items()}
             duration = {k: int(v / min(duration.values())) for k, v in duration.items()}
-            duration = dict(sorted(duration.items(), key=lambda item: item[1], reverse=True))
+            duration = dict(sorted(duration.items(), key=lambda item: item[1] * streets[item[0]].starting_cars, reverse=True))
             if len(duration) > 0:
                 self.solution.append(Schedule(
                     intersection.id,
