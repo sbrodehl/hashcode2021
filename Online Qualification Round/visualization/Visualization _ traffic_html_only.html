@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" ng-app="visualization_traffic.application" ng-cloack>
+  <head>
+    <title>Visualization | traffic </title>
+    <meta charset="utf-8">
+    <meta name="description" content="Hash Code Judge System Visualization traffic">
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="/css/third_party_styles-bundle.css"/>
+    <link rel="stylesheet" href="/css/judge.css"/>
+
+    <base href="/visualization/traffic">
+
+    <script src="/js/third_party.js"></script>
+    <script src="/visualization/traffic/js/js.js"></script>
+  </head>
+  <body  ng-controller="IndexCtrl as ctrl" >
+    <visualizationtraffic
+       input="ctrl.input"
+       submission="ctrl.submission"
+       sidecar="ctrl.sidecar">
+    </visualizationtraffic>
+  </body>
+</html>
