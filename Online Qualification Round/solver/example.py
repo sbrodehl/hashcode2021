@@ -1,6 +1,7 @@
 import logging
 
 from .basesolver import BaseSolver
+from .schedule import Schedule
 
 LOGGER = logging.getLogger(__name__)
 
@@ -19,4 +20,16 @@ class Example(BaseSolver):
         :return: True, if a solution is found, False otherwise
         """
         self.solution = []
+        # naive thing: intersections with only one in and one out can be 'green' all the time
+        (d, i, s, v, f), streets, cars, intersections = self.data
+        for intersection in intersections:
+            if len(intersection.incoming) == 1:
+                # always on!
+                self.solution.append(Schedule(
+                    intersection.id,
+                    intersection.incoming,
+                    [(1, name) for name in intersection.incoming]
+                ))
+                # simplify map by joining both streets
+                # TODO
         return True
