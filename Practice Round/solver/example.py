@@ -31,30 +31,47 @@ class Example(BaseSolver):
                 # iterate over amount of needed pizzas for this delivery
                 for _ in range(ts):
                     least_overlap = 10001
-                    best_pizza = None
+                    best_improvement = 0
+                    next_pizza = None
                     # iterate over available and unselected pizzas
                     for p in [p for p in pizzas if not p.delivered]:
                         # stop looking for pizzas if enough pizzas are selected
                         if delivery.complete():
+                            LOGGER.debug("Delivery is COMPLETE.")
                             break
-                        elif delivery.empty():
-                            # if no pizza is selected, take the first we get
-                            delivery.add(p)
-                        else:
-                            # otherwise, check if we can add a pizza with (completely) new ingredients
-                            overlap = len(delivery.ingredients.intersection(p.ingredients))
+                        # if no pizza is selected, take the first we get
+                        if delivery.empty():
+                            next_pizza = p
+                            best_improvement = len(p)
+                            break
+                        # since pizzas are ordered, if ingredient length is smaller than current improvement -> skip
+                        if len(p) < best_improvement:
+                            break
+                        # check if we can add a pizza with (completely) new ingredients
+                        # or at least select a pizza with the most new ingredients
+                        overlap = len(delivery.ingredients.intersection(p.ingredients))
+                        improvement = len(p) - overlap
+
+                        _has_improvement = (improvement > best_improvement)
+                        _has_equal_improvement = (improvement == best_improvement)
+                        _has_lower_overlap = (overlap < least_overlap)
+                        if _has_improvement or (_has_equal_improvement and _has_lower_overlap):
+                            best_improvement = improvement
+                            least_overlap = overlap
+                            next_pizza = p
+                            # if overlap is zero, no better pizza is available
                             if overlap == 0:
-                                delivery.add(p)
-                            # if not, take pizza with least overlap
-                            else:
-                                if overlap < least_overlap:
-                                    least_overlap = overlap
-                                    best_pizza = p
-                    if best_pizza is not None:
-                        logging.info(f"Best pizza is {best_pizza} with overlap {least_overlap}.")
-                        delivery.add(best_pizza)
+                                break
+
+                    # check if a new pizza is available which improves the score
+                    if next_pizza is not None and best_improvement > 0:
+                        delivery.add(next_pizza)
 
                 # a valid delivery has enough pizzas for all team members
                 if delivery.complete():
                     self.solution.append(delivery)
+                else:
+                    # free chosen pizzas
+                    for pid in delivery.pizza_ids:
+                        pizzas[pid].delivered = False
         return True
