@@ -24,7 +24,7 @@ See the [README.md](Practice%20Round/README.md) for a full walkthrough of the pr
 >
 > ![Practice Round Teaser](Practice%20Round/practice_round_teaser.png)
 > 
-> _from [Problem statement for the Practice Round of Hash Code 2021](Practice%20Round/practice_round_2021_v3.pdf)_
+> _from the [problem statement for the Practice Round of Hash Code 2021](Practice%20Round/practice_round_2021_v3.pdf)_
 
 
 ## License
