@@ -47,17 +47,19 @@ class Heuristics(BaseSolver):
         LOGGER.info(f"{empty_streets} / {len(streets)}"
                     f" ({empty_streets * 100.0 / len(streets):.2f}%) streets are not used.")
 
-        # add random schedule for other intersections ;-)
+        # add schedule based and (overall) car frequency
         for intersection in intersections:
             # skip intersections with schedules
             if intersection.has_schedule:
                 continue
             visits = {name: streets[name].visits for name in intersection.incoming if streets[name].visits > 0}
             duration = {k: int(d * v / sum(visits.values())) for k, v in visits.items()}
+            duration = {k: int(v / min(duration.values())) for k, v in duration.items()}
+            duration = dict(sorted(duration.items(), key=lambda item: item[1], reverse=True))
             if len(duration) > 0:
                 self.solution.append(Schedule(
                     intersection.id,
                     list(duration.keys()),
-                    [(duration[name], name) for name in intersection.incoming if name in duration]
+                    [(duration[name], name) for name in duration]
                 ))
         return True
