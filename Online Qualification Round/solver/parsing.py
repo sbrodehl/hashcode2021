@@ -42,6 +42,8 @@ def parse_input(file_in):
             names = l_[1:]
             assert p == len(names)
             cars.append(Car(car_id, names))
+            starting_street = names[0]
+            streets[starting_street].starting_cars += 1
 
         assert len(cars) == v
 

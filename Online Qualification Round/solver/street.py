@@ -10,3 +10,4 @@ class Street:
     name: str
     travel_time: int
     visits: int = 0
+    starting_cars: int = 0
