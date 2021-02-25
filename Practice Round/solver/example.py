@@ -5,7 +5,8 @@ from .delivery import Delivery
 
 LOGGER = logging.getLogger(__name__)
 
-class Solver(BaseSolver):
+
+class Example(BaseSolver):
     """Solve the problem nice and steady!
     """
     def __init__(self, input_str):
