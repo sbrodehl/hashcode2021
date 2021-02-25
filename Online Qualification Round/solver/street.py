@@ -9,3 +9,4 @@ class Street:
     end_intersection: int
     name: str
     travel_time: int
+    visits: int = 0
