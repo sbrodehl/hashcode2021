@@ -1,6 +1,9 @@
+import logging
 from dataclasses import dataclass, field, InitVar
 
 from .pizza import Pizza
+
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -16,6 +19,7 @@ class Delivery:
             self.pizza_ids.add(pizza.id)
             pizza.delivered = True
             self.ingredients.update(pizza.ingredients)
+            LOGGER.debug(f"Adding {pizza} to {self}.")
 
     def __post_init__(self, pizzas: list[Pizza]):
         if len(self.pizza_ids) > 0 and pizzas is not None:

@@ -3,6 +3,7 @@ import logging
 from .basesolver import BaseSolver
 from .delivery import Delivery
 
+LOGGER = logging.getLogger(__name__)
 
 class Solver(BaseSolver):
     """Solve the problem nice and steady!
@@ -22,10 +23,10 @@ class Solver(BaseSolver):
         pizzas.sort(key=len, reverse=True)
         self.solution = []
         for ts, ds in teams.items():
-            logging.info(f"Selecting pizzas for teams of {ts}, {ds} deliveries.")
+            LOGGER.info(f"Selecting pizzas for teams of {ts}, {ds} deliveries.")
             for d in range(ds):
                 delivery = Delivery(ts)
-                logging.info(f"Processing delivery {d} of {ds} ({ts}).")
+                LOGGER.debug(f"Processing delivery {d + 1}/{ds}.")
                 # iterate over amount of needed pizzas for this delivery
                 for _ in range(ts):
                     least_overlap = 10001

@@ -4,6 +4,8 @@ import collections
 from .pizza import Pizza
 from .delivery import Delivery
 
+LOGGER = logging.getLogger(__name__)
+
 
 def parse_input(file_in):
     """
@@ -11,7 +13,7 @@ def parse_input(file_in):
     :param file_in: input file name
     :return: (m, t2, t3, t4), available_pizzas
     """
-    logging.debug("Parsing file '{}'".format(file_in))
+    LOGGER.debug("Parsing file '{}'".format(file_in))
     available_pizzas = []
     with open(file_in, 'r') as f:
         first_line = f.readline().strip()
@@ -29,7 +31,7 @@ def parse_input(file_in):
 
         assert pid + 1 == m
 
-    logging.debug("Parsing '{}' - Done!".format(file_in))
+    LOGGER.debug("Parsing '{}' - Done!".format(file_in))
     return m, collections.OrderedDict({4: t4, 3: t3, 2: t2}), available_pizzas
 
 
@@ -40,12 +42,13 @@ def parse_output(file_out, problem_set):
     :param problem_set: input problem set
     :return: n, deliveries
     """
-    logging.debug("Parsing '{}'".format(file_out))
+    LOGGER.debug("Parsing '{}'".format(file_out))
     solution = []
     with open(file_out, 'r') as f:
         first_line = f.readline().strip()
         deliveries = int(first_line)
 
+        did = -1
         for did, line in enumerate(f.readlines()):
             l_ = list(map(int, line.strip().split(' ')))
             solution.append(Delivery(int(l_[0]), set(map(int, l_[1:])), pizzas=problem_set[2]))
@@ -53,12 +56,12 @@ def parse_output(file_out, problem_set):
         # check read amount of deliveries
         assert did + 1 == deliveries
 
-    logging.debug("Parsing '{}' - Done!".format(file_out))
+    LOGGER.debug("Parsing '{}' - Done!".format(file_out))
     return solution
 
 
 def write_output(file_out, solution):
-    logging.debug("Writing solution '{}'".format(file_out))
+    LOGGER.debug("Writing solution '{}'".format(file_out))
     with open(file_out, 'w') as f:
         f.write("{}\n".format(str(len(solution))))
         for delivery in solution:

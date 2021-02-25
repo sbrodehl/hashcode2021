@@ -2,9 +2,9 @@
 import logging
 from dataclasses import dataclass, field
 
-import numpy as np
-
 from .parsing import parse_input, parse_output
+
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -38,15 +38,15 @@ def compute_score(file_in, file_out):
     for d in deliveries:
         # check if all pizzas are available
         if not all(not pizzas[pid].delivered for pid in d.pizza_ids):
-            logging.error(f"Delivery contains already delivered pizzas! ({d})")
+            LOGGER.error(f"Delivery contains already delivered pizzas! ({d})")
             break
         # check if enough pizzas are delivery for the team
         if not d.complete():
-            logging.error(f"Delivery contains not enough pizzas! ({d})")
+            LOGGER.error(f"Delivery contains not enough pizzas! ({d})")
             break
         # check amount of deliveries per team size
         if teams[d.team_size] <= 0:
-            logging.error(f"More deliveries than teams found for size {d.team_size}!")
+            LOGGER.error(f"More deliveries than teams found for size {d.team_size}!")
             break
         teams[d.team_size] -= 1  # decrease seen deliveries for the team size
         # now compute actual score
@@ -67,4 +67,4 @@ if __name__ == '__main__':
 
     score = compute_score(args.file_in, args.file_out)
 
-    print("Score for {}: {} points".format(args.file_out, score.total()))
+    print("Score for {}: {} points".format(args.file_out, score.total))
