@@ -27,6 +27,8 @@ def parse_input(file_in):
             name, l = l_[2], int(l_[3])
             streets[name] = Street(street_id, b, e, name, l)
 
+        assert len(streets) == s
+
         # read all CARS
         for car_id in range(v):
             l_ = fp.readline().strip().split(' ')
@@ -34,6 +36,8 @@ def parse_input(file_in):
             names = l_[1:]
             assert p == len(names)
             cars.append(Car(car_id, names))
+
+        assert len(cars) == v
 
     LOGGER.info(f"Read {len(cars)} cars and {len(streets)} streets.")
     LOGGER.info("Parsing '{}' - Done!".format(file_in))
