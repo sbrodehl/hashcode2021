@@ -45,6 +45,7 @@ def parse_input(file_in):
 
         assert len(cars) == v
 
+    LOGGER.info(f"Data set with duration {d}, intersections {i}, streets {s}, cars {v} and bonus points {f}.")
     LOGGER.info(f"Read {len(cars)} cars and {len(streets)} streets.")
     LOGGER.info("Parsing '{}' - Done!".format(file_in))
     return (d, i, s, v, f), streets, cars, intersections
