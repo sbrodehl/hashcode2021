@@ -1,5 +1,7 @@
 import logging
-import collections
+
+from .street import Street
+from .car import Car
 
 
 LOGGER = logging.getLogger(__name__)
@@ -9,23 +11,33 @@ def parse_input(file_in):
     """
     Parse input file
     :param file_in: input file name
-    :return: (m, t2, t3, t4), available_pizzas
+    :return: streets, cars
     """
     LOGGER.info("Parsing file '{}'".format(file_in))
-    data = []
-    with open(file_in, 'r') as f:
-        first_line = f.readline().strip()
-        l_ = list(map(int, list(first_line.split(" "))))
-        print(first_line)
+    streets = {}
+    cars = []
+    with open(file_in, 'r') as fp:
+        # read META data
+        d, i, s, v, f = list(map(int, list( fp.readline().strip().split(" "))))
 
-        lid = -1
-        for lid, line in enumerate(f.readlines()):
-            l_ = line.strip().split(' ')
+        # read all STREETS
+        for street_id in range(s):
+            l_ = fp.readline().strip().split(' ')
+            b, e = list(map(int, l_[:2]))
+            name, l = l_[2], int(l_[3])
+            streets[name] = Street(street_id, b, e, name, l)
 
-        print(f"Read {lid} additional lines.")
+        # read all CARS
+        for car_id in range(v):
+            l_ = fp.readline().strip().split(' ')
+            p = int(l_[0])
+            names = l_[1:]
+            assert p == len(names)
+            cars.append(Car(car_id, names))
 
+    LOGGER.info(f"Read {len(cars)} cars and {len(streets)} streets.")
     LOGGER.info("Parsing '{}' - Done!".format(file_in))
-    return data
+    return streets, cars
 
 
 def parse_output(file_out, problem_set):
