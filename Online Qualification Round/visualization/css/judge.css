@@ -1,0 +1,327 @@
+a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+/*
+  Allow angular.js to be loaded in body, hiding cloaked elements until
+  templates compile.  The !important is important given that there may be
+  other selectors that are more specific or come later and might alter display.
+ */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+.hcj-scoreboard-container {
+  height: 480px;
+}
+
+.hcj-scoreboard-info {
+  color: grey;
+}
+
+.hcj-scoreboard-index {
+  flex: 0 0 6ch;
+}
+
+.hcj-scoreboard-score {
+  flex: 0 0 12ch;
+}
+
+.hcj-scoreboard-margin {
+  margin-right: 12px;
+}
+
+.hcj-scoreboard-flags {
+  width: 12ch;
+  display: inline-block;
+}
+
+.hcj-list-container {
+  height: 720px;
+}
+
+.hcj-highlighted {
+  background-color: #bbdefb;
+  font-weight: bold;
+}
+
+.hcj-button-nomargin {
+  margin: 0;
+}
+
+.hcj-submission-icon {
+  margin-left: 10px;
+}
+
+.hcj-submission-icon:hover {
+  cursor: pointer;
+}
+
+.hcj-submission-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.hcj-spinner-container {
+  height: 100px;
+}
+
+.hcj-no-overflow {
+  overflow: hidden;
+}
+
+.hcj-help-text {
+  color: rgba(0,0,0,0.54);
+}
+
+/* Sidenav */
+
+.hcj-sidenav {
+  width: 272px;
+}
+
+.hcj-logo {
+  display: block;
+  text-align: center;
+  color: white;
+  margin: 20px 0;
+}
+
+.hcj-logo-img {
+  width: 180px;
+  height: 45px;
+}
+
+.hcj-logo-headline {
+  font-size: 20px;
+  margin: 20px 0 0;
+  font-weight: normal;
+}
+
+/* Add underline text-decoration for banner links. See b/125687327. */
+.md-warn markdown a {
+  text-decoration: underline;
+}
+
+.hcj-menu {
+  background-color: inherit;
+}
+
+.hcj-menu .md-subheader {
+  color: rgba(255, 255, 255, 0.7);
+  background-color: inherit;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.hcj-menu .md-subheader-inner {
+  padding-bottom: 8px;
+}
+
+.hcj-menu .md-button {
+  color: white;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+}
+
+/* TODO(b/70067352): Remove code below once it is fixed. */
+.md-button:not([disabled]):focus {
+  background-color: rgba(158, 158, 158, 0.2);
+}
+
+.hcj-menu md-icon {
+  color: white;
+}
+
+.hcj-menu md-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Toolbar */
+
+.hcj-toolbar {
+  background: #f6f6f6 !important;
+  color: #202020 !important;
+  z-index: 3;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.14),
+              0px 0px 2px 2px rgba(0, 0, 0, 0.098),
+              0px 0px 5px 1px rgba(0, 0, 0, 0.084);
+}
+
+.hcj-toolbar md-icon {
+  color: black !important;
+}
+
+.hcj-account {
+  display: flex;
+  cursor: pointer;
+}
+
+.hcj-account-email {
+  font-size: 13px;
+  text-transform: lowercase;
+  margin: 2px 0 0 6px;
+}
+
+.hcj-account-avatar {
+  border-radius: 50%;
+  height: 18px;
+  width: 18px;
+  padding: 1px 2px;
+}
+
+.hcj-account-avatar md-icon {
+  font-size: 14px;
+  color: white !important;
+}
+
+/* Body */
+
+.hcj-content {
+  padding: 32px;
+  width: 100%;
+  max-width: 960px;
+  overflow-y: auto;
+}
+
+.hcj-scoreboard-loading {
+  margin-top: 32px;
+  position: absolute;
+  width: 100%;
+}
+
+.hcj-loading-message {
+  margin-top: 20px;
+  color: #aaa;
+}
+
+/* Cards */
+
+.hcj-card-banner md-card-header-text {
+  min-height: 40px;
+  max-height: none;
+  justify-content: center;
+}
+
+.hcj-card-banner md-card-avatar {
+  margin-left: 0 !important;
+}
+
+.hcj-status-error {
+  color: rgb(244, 67, 54);
+}
+
+.hcj-status-ok {
+  color: rgb(76, 175, 80);
+}
+
+.hcj-delta-increase {
+  color: rgb(76, 175, 80);
+  margin-top: -3px;
+}
+
+/* Submission insights dialog */
+
+.hcj-insights-dialog {
+  width: 80%;
+  max-width: none;
+  height: 80%;
+  max-height: none;
+}
+
+.hcj-insights-dialog md-dialog-content {
+  height: 100%;
+  padding: 1em;
+  overflow: auto;
+}
+
+/* Contact dialog */
+
+.hcj-contact-dialog {
+  margin: auto 25px 25px auto;
+  max-width: 500px;
+}
+
+/* Submission dialog */
+.hcj-submission-dialog {
+  margin: auto;
+  max-width: 800px;
+}
+
+/* File upload */
+
+.hcj-upload md-input-container {
+  margin: 5px;
+}
+
+.hcj-upload-content {
+  height: 38px;
+}
+
+.hcj-upload-input {
+  display: none !important;
+}
+
+.hcj-upload-file {
+  height: 36px;
+  width: 200px;
+  align-items: center;
+  margin: 6px 0;
+  padding: 0 6px;
+  display: flex;
+}
+
+.hcj-divider-after-submission {
+  margin-bottom: 18px;
+}
+
+/* Styles for Countdown */
+.hcj-countdown {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.hcj-countdown .content {
+  margin-top: 8px;
+  line-height: normal;
+}
+
+.hcj-countdown .element {
+  float: left;
+  text-align: center;
+  margin-right: 10px;
+  border-right: 1px solid #dedede;
+  padding-right: 10px;
+}
+
+.hcj-countdown .element.element-seconds {
+  margin-right: 0;
+  padding-right: 0;
+  border-right: 0;
+}
+
+.hcj-countdown .label {
+  font-size: 12px;
+  text-transform: lowercase;
+}
+
+.hcj-countdown .value {
+  font-size: 34px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.hcj-social-buttons {
+  display:inline;
+  padding: 0 0.5em;
+}
+
+.hcj-social-buttons img {
+  width: 1.7em;
+  height: 1.7em;
+}
