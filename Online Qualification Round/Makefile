@@ -9,7 +9,7 @@ endif
 all: a b c d e f
 
 zip:
-	zip -r output/submission.zip . --exclude @.exclude.lst
+	rm output/submission.zip && zip -r output/submission.zip . --exclude @.exclude.lst
 
 a: zip
 	python main.py input/a.txt --output output/a.txt --solver $(SOLVER) $(DEBUGSTR)
