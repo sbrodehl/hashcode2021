@@ -1,5 +1,6 @@
 output/*
 input/*
+visualization/*
 *.png
 *.pdf
 *.md
