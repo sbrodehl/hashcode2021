@@ -1,4 +1,4 @@
-SOLVER=example
+SOLVER=heuristics
 
 ifdef DEBUG
 DEBUGSTR = --debug
