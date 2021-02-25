@@ -18,6 +18,8 @@ Hash Code 2021 Online Qualifications Livestream
 > Nowadays they are automatic, meaning that they have to be carefully designed and
 > timed in order to optimize the overall travel time for all the participants in traffic.
 > 
+> ![Online Qualifications Teaser](online_qualificatsions_teaser.png)
+> 
 > _from the [Problem statement for the Online Qualifications of Hash Code 2021][problem-statement]_
 
 #### Task
