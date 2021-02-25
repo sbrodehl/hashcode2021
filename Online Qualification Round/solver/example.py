@@ -30,6 +30,16 @@ class Example(BaseSolver):
                     intersection.incoming,
                     [(1, name) for name in intersection.incoming]
                 ))
-                # simplify map by joining both streets
-                # TODO
+                intersection.has_schedule = True
+                # TODO simplify map by joining both streets?
+        # add random schedule for other intersections ;-)
+        for intersection in intersections:
+            # skip intersections with schedules
+            if intersection.has_schedule:
+                continue
+            self.solution.append(Schedule(
+                intersection.id,
+                intersection.incoming,
+                [(1, name) for name in intersection.incoming]
+            ))
         return True
