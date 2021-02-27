@@ -8,6 +8,9 @@ endif
 
 all: a b c d e f
 
+json:
+	find input -type f -iname "*.txt" -exec python main.py --json $(DEBUGSTR) {} \;
+
 zip:
 	rm -f output/submission.zip && zip -r output/submission.zip . --exclude @.exclude.lst
 

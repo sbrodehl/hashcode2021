@@ -31,7 +31,7 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--solver", help="available solver", type=str, choices=cls_names, default="example")
     group.add_argument('--score', help="computes score and insights of given data set", action='store_true')
-
+    group.add_argument('--json', help="convert problem data set(s) to json", action='store_true')
     args = parser.parse_args()
 
     if args.debug:
