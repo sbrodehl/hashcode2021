@@ -14,38 +14,33 @@ def convert(in_fp: str, out_fp: str):
     _street_names = {v.name: v.id for k, v in streets.items()}
     data = {
         "d": d,
-        "i": i,
-        "s": s,
-        "v": v,
         "f": f,
-        "cars": {c.id: c.__dict__ for c in cars},
-        "streets": {v.id: v.__dict__ for k, v in streets.items()},
-        "intersections": {i.id: i.__dict__ for i in intersections},
+        "v": [c.__dict__ for c in cars],
+        "s": [v.__dict__ for k, v in streets.items()],
+        "i": [i.__dict__ for i in intersections],
     }
     del streets, intersections, cars, d, i, s, v, f
     # delete not needed members
-    for s in data["streets"]:
-        del data["streets"][s]["id"]
-        del data["streets"][s]["visits"]
-        del data["streets"][s]["starting_cars"]
-        data["streets"][s]["b"] = data["streets"][s]["begin_intersection"]
-        data["streets"][s]["e"] = data["streets"][s]["end_intersection"]
-        data["streets"][s]["t"] = data["streets"][s]["travel_time"]
-        data["streets"][s]["n"] = data["streets"][s]["name"]
-        del data["streets"][s]["begin_intersection"]
-        del data["streets"][s]["end_intersection"]
-        del data["streets"][s]["travel_time"]
-        del data["streets"][s]["name"]
-    for i in data["intersections"]:
-        del data["intersections"][i]["id"]
-        del data["intersections"][i]["has_schedule"]
-        data["intersections"][i]["in"] = [_street_names[s] for s in data["intersections"][i]["incoming"]]
-        data["intersections"][i]["out"] = [_street_names[s] for s in data["intersections"][i]["outgoing"]]
-        del data["intersections"][i]["incoming"]
-        del data["intersections"][i]["outgoing"]
-    for c in data["cars"]:
-        del data["cars"][c]["id"]
-        data["cars"][c]["s"] = [_street_names[s] for s in data["cars"][c]["streets"]]
-        del data["cars"][c]["streets"]
+    for s in data["s"]:
+        s["source"] = s["begin_intersection"]
+        s["target"] = s["end_intersection"]
+        s["t"] = s["travel_time"]
+        s["n"] = s["name"]
+        del s["visits"]
+        del s["starting_cars"]
+        del s["begin_intersection"]
+        del s["end_intersection"]
+        del s["travel_time"]
+        del s["name"]
+    for i in data["i"]:
+        i["in"] = [_street_names[s] for s in i["incoming"]]
+        i["out"] = [_street_names[s] for s in i["outgoing"]]
+        i["w"] = len(i["in"]) + len(i["out"])
+        del i["incoming"]
+        del i["outgoing"]
+        del i["has_schedule"]
+    for c in data["v"]:
+        c["s"] = [_street_names[s] for s in c["streets"]]
+        del c["streets"]
     with open(out_fp, "w") as fp:
         json.dump(data, fp, separators=(',', ':'))
