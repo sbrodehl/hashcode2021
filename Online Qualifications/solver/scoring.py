@@ -26,7 +26,7 @@ def compute_score(file_in, file_out):
     """
     # read input and output files
     _in = parse_input(file_in)
-    _out = parse_output(file_out, _in)
+    _out = parse_output(file_out)
     s = Score()
     for o in _out:
         # add score
