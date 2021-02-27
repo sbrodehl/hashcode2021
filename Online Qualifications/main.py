@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # need to be
     parser.add_argument("input", help="input file")
-    parser.add_argument("--output", help="output file")
+    parser.add_argument("--output", help="output file", default="output")
 
     parser.add_argument('--debug', action='store_true', help='set debug level')
     group = parser.add_mutually_exclusive_group(required=True)
@@ -43,6 +43,10 @@ if __name__ == '__main__':
     if args.score:
         scoring = importlib.import_module("solver.scoring")
         score = scoring.compute_score(args.input, args.output)
+        exit(0)
+    elif args.json:
+        to_json = importlib.import_module("solver.toJSON")
+        to_json.convert(args.input, args.output)
         exit(0)
 
     # get the chosen solver
