@@ -13,7 +13,7 @@ def parse_input(file_in):
     """
     Parse input file
     :param file_in: input file name
-    :return: streets, cars
+    :return: (d, i, s, v, f), streets, cars, intersections
     """
     LOGGER.info("Parsing file '{}'".format(file_in))
     streets = {}
