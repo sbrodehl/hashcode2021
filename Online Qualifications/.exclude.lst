@@ -8,3 +8,4 @@ visualization/*
 *.lst
 *.html
 *__pycache__*
+*.zip
