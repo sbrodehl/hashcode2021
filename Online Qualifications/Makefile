@@ -6,7 +6,7 @@ else
 DEBUGSTR =
 endif
 
-all: a b c d e f
+all: a b c d e f g
 
 json:
 	find input -type f -iname "*.txt" -exec python main.py --json $(DEBUGSTR) {} \;
@@ -31,3 +31,6 @@ e: zip
 
 f: zip
 	python main.py input/f_forever_jammed.txt --output output/f_forever_jammed.txt --solver $(SOLVER) $(DEBUGSTR)
+
+g: zip
+	python main.py input/g_kaggle.txt --output output/g_kaggle.txt --solver $(SOLVER) $(DEBUGSTR)
