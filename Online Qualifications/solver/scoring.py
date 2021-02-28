@@ -55,9 +55,8 @@ class Score:
         LOGGER.debug(f"Last car to reach its destination was {nsghs['last_car']}.")
         avg_cycle_l = 1.0 * nsghs['cycle_length'] / nsghs['cycles']
         avg_phase_l = 1.0 * nsghs['green_phase_sum'] / nsghs['green_phases']
-        LOGGER.info(
-            f"The schedules for the {nsghs['lights']:,} intersections had an average total cycle length of {avg_cycle_l:.2f} seconds."
-            f" A traffic light that turned green was scheduled to stay green for {avg_phase_l:.2f} seconds on average.")
+        LOGGER.info(f"The schedules for the {nsghs['lights']:,} intersections had an average total cycle length of {avg_cycle_l:.2f} seconds."
+                    f" A traffic light that turned green was scheduled to stay green for {avg_phase_l:.2f} seconds on average.")
 
 
 def compute_score(file_in, file_out):
