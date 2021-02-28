@@ -38,16 +38,19 @@ class Score:
     def print_insights(self):
         nsghs = self.insights
         LOGGER.info(f"Submission: {Markup.BOLD}Scoring & Insights{Markup.END}")
-        LOGGER.info(f"Your submission scored {Markup.BOLD}{self.total:,}{Markup.END} points."
+        LOGGER.info(f"Your submission scored {Markup.BOLD}{self.total:,} points{Markup.END}."
                     f" This is the sum of {self.bonus:,} bonus points for cars arriving before the deadline"
                     f" ({nsghs['bonus']:,} points each) and {self.early:,} points for early arrival times.")
+        LOGGER.info(f"The (theoretical) optimal scores is {nsghs['best_score']:,} points.")
         deadline_pct = 100.0 * nsghs['before_deadline'] / nsghs['cars']
-        travel_t_m = 1.0 * nsghs['sum_travel_times'] / nsghs['before_deadline']
-        LOGGER.info(
-            f"{nsghs['before_deadline']:,} of {nsghs['cars']:,} cars arrived before the deadline ({deadline_pct:.2f}%)."
-            f" The earliest car arrived at its destination after {nsghs['first_car'].travel_time:,} seconds scoring {nsghs['bonus'] + (nsghs['duration'] - nsghs['first_car'].travel_time):,} points,"
-            f" whereas the last car arrived at its destination after {nsghs['last_car'].travel_time:,} seconds scoring {nsghs['bonus'] + (nsghs['duration'] - nsghs['last_car'].travel_time):,} points."
-            f" Cars that arrived within the deadline drove for an average of {travel_t_m:.2f} seconds to arrive at their destination.")
+
+        _str = f"{nsghs['before_deadline']:,} of {nsghs['cars']:,} cars arrived before the deadline ({deadline_pct:.2f}%)."
+        if nsghs['before_deadline'] > 0:
+            travel_t_m = 1.0 * nsghs['sum_travel_times'] / nsghs['before_deadline']
+            _str += f" The earliest car arrived at its destination after {nsghs['first_car'].travel_time:,} seconds scoring {nsghs['bonus'] + (nsghs['duration'] - nsghs['first_car'].travel_time):,} points,"\
+                    f" whereas the last car arrived at its destination after {nsghs['last_car'].travel_time:,} seconds scoring {nsghs['bonus'] + (nsghs['duration'] - nsghs['last_car'].travel_time):,} points."\
+                    f" Cars that arrived within the deadline drove for an average of {travel_t_m:.2f} seconds to arrive at their destination."
+        LOGGER.info(_str)
         LOGGER.debug(f"First car to reach its destination was {nsghs['first_car']}.")
         LOGGER.debug(f"Last car to reach its destination was {nsghs['last_car']}.")
         avg_cycle_l = 1.0 * nsghs['cycle_length'] / nsghs['cycles']
@@ -69,8 +72,15 @@ def compute_score(file_in, file_out):
     _out = parse_output(file_out)
     bonus = _in[0][1]
     duration = _in[0][0]
-    sim = Simulation(duration, *(_in[1:])).setup(_out).run()
     s = Score()
+    s.insights['best_score'] = 0
+    sim = Simulation(duration, *(_in[1:]))
+    # compute upper bound of available points
+    for v in sim.cars:
+        assert len(v.streets) >= 2
+        s.insights['best_score'] += bonus + (duration - sum([sim.streets[s].travel_time for s in v.streets[1:]]))
+    sim.setup(_out).run()
+    # add some insights
     s.insights['bonus'] = bonus
     s.insights['lights'] = len(sim.intersections)
     s.insights['duration'] = duration
