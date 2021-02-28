@@ -13,7 +13,7 @@ def parse_input(file_in):
     """
     Parse input file
     :param file_in: input file name
-    :return: (d, i, s, v, f), streets, cars, intersections
+    :return: (duration, bonus), streets, cars, intersections
     """
     LOGGER.info("Parsing file '{}'".format(file_in))
     streets = {}
@@ -50,14 +50,14 @@ def parse_input(file_in):
     LOGGER.info(f"Data set with duration {d}, intersections {i}, streets {s}, cars {v} and bonus points {f}.")
     LOGGER.info(f"Read {len(cars)} cars and {len(streets)} streets.")
     LOGGER.info("Parsing '{}' - Done!".format(file_in))
-    return (d, i, s, v, f), streets, cars, intersections
+    return (d, f), streets, cars, intersections
 
 
 def parse_output(file_out):
     """
     Parse output file
     :param file_out: output file name (solution)
-    :return: n, deliveries
+    :return: schedules
     """
     LOGGER.info("Parsing '{}'".format(file_out))
     solution = []
