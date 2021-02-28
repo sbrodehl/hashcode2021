@@ -56,7 +56,7 @@ class Heuristics(BaseSolver):
             duration = {k: int(d * v / sum(visits.values())) for k, v in visits.items()}
             duration = {k: int(v / min(duration.values())) for k, v in duration.items()}
             duration = dict(sorted(duration.items(), key=lambda item: item[1] * streets[item[0]].starting_cars, reverse=True))
-            # daily commute special
+            # daily commute special / kaggle
             # duration = dict(sorted({name: 1 for name in intersection.incoming if streets[name].visits > 0}.items(), key=lambda item: streets[item[0]].starting_cars, reverse=True))
             if len(duration) > 0:
                 intersection.schedule = Schedule(
