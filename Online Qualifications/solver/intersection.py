@@ -1,6 +1,9 @@
+from typing import Dict
+from collections import deque
 from dataclasses import dataclass, field
 
 from .street import Street
+from .schedule import Schedule
 
 
 @dataclass
@@ -9,7 +12,8 @@ class Intersection:
     id: int
     incoming: list = field(default_factory=list, init=False)
     outgoing: list = field(default_factory=list, init=False)
-    has_schedule: bool = False
+    waiting: Dict[str, deque] = field(default_factory=dict)
+    schedule: Schedule = None
 
     def add_incoming(self, street: Street):
         if street.name not in self.incoming:

@@ -20,17 +20,17 @@ class Heuristics(BaseSolver):
         :return: True, if a solution is found, False otherwise
         """
         self.solution = []
-        (d, i, s, v, f), streets, cars, intersections = self.data
+        (d, f), streets, cars, intersections = self.data
         # naive thing: intersections with only one in and one out can be 'green' all the time
         for intersection in intersections:
             if len(intersection.incoming) == 1:
                 # always on!
-                self.solution.append(Schedule(
+                intersection.schedule = Schedule(
                     intersection.id,
                     intersection.incoming,
                     [(1, name) for name in intersection.incoming]
-                ))
-                intersection.has_schedule = True
+                )
+                self.solution.append(intersection.schedule)
                 # simplify map by joining both streets?
                 pass
         LOGGER.info(f"{len(self.solution)} / {len(intersections)}"
@@ -50,7 +50,7 @@ class Heuristics(BaseSolver):
         # add schedule based and (overall) car frequency
         for intersection in intersections:
             # skip intersections with schedules
-            if intersection.has_schedule:
+            if intersection.schedule is not None:
                 continue
             visits = {name: streets[name].visits for name in intersection.incoming if streets[name].visits > 0}
             duration = {k: int(d * v / sum(visits.values())) for k, v in visits.items()}
@@ -59,9 +59,12 @@ class Heuristics(BaseSolver):
             # daily commute special
             # duration = dict(sorted({name: 1 for name in intersection.incoming if streets[name].visits > 0}.items(), key=lambda item: streets[item[0]].starting_cars, reverse=True))
             if len(duration) > 0:
-                self.solution.append(Schedule(
+                intersection.schedule = Schedule(
                     intersection.id,
                     list(duration.keys()),
                     [(duration[name], name) for name in duration]
-                ))
+                )
+                self.solution.append(intersection.schedule)
+            else:
+                LOGGER.debug(f"No schedule, no incoming traffic at {intersection}.")
         return True

@@ -1,3 +1,4 @@
+from typing import Union
 from dataclasses import dataclass
 
 
@@ -5,8 +6,8 @@ from dataclasses import dataclass
 class Street:
     """Class representing a street with intersections and travel time."""
     id: int
-    begin_intersection: int
-    end_intersection: int
+    begin_intersection: Union[int, "Intersection"]
+    end_intersection: Union[int, "Intersection"]
     name: str
     travel_time: int
     visits: int = 0
