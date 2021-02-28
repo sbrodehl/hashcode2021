@@ -88,3 +88,4 @@ def write_output(file_out, solution: list[Schedule]):
             f.write(f"{len(s.streets_covered)}\n")
             for sec, street_name in s.order:
                 f.write(f"{street_name} {sec}\n")
+    LOGGER.debug("Writing solution '{}' - Done!".format(file_out))
