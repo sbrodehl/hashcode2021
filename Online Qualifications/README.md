@@ -46,6 +46,9 @@ The input files can be found in [`input/`](input)
 | [d_daily_commute.txt](input/d_daily_commute.txt)   | 8071     | 8000          | 95928   | 1000 | 1000         |
 | [e_etoile.txt](input/e_etoile.txt)                 | 676      | 500           | 998     | 1000 | 500          |
 | [f_forever_jammed.txt](input/f_forever_jammed.txt) | 1992     | 1662          | 10000   | 1000 | 500          |
+| [g_kaggle.txt](input/g_kaggle.txt)*                | 7071     | 8000          | 63968   | 1000 | 1000         |
+
+*This problem set was released during the extension round on [kaggle](https://www.kaggle.com/c/hashcode-2021-oqr-extension).
 
 ## Scores
 
