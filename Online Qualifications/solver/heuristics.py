@@ -37,7 +37,7 @@ class Heuristics(BaseSolver):
 
         # add heuristic for streets regarding visits
         for car in cars:
-            for street in car.streets:
+            for street in car.streets:  # TODO: revisit this
                 streets[street].visits += 1
             streets[car.streets[0]].starting_cars += 1
         empty_streets = 0
