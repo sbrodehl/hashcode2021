@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import logging
+import copy
 from dataclasses import dataclass, field
 
 from .parsing import parse_input, parse_output
@@ -70,14 +71,15 @@ def compute_score(file_in, file_out):
     _in = parse_input(file_in)
     _out = parse_output(file_out)
     bonus = _in[0][1]
+    streets, cars, intersections = _in[1:]
     duration = _in[0][0]
     s = Score()
     s.insights['best_score'] = 0
-    sim = Simulation(duration, *(_in[1:]))
+    sim = Simulation(duration, streets, copy.deepcopy(cars), intersections)
     # compute upper bound of available points
     for v in sim.cars:
         assert len(v.streets) >= 2
-        s.insights['best_score'] += bonus + (duration - sum([sim.streets[s].travel_time for s in v.streets[1:]]))
+        s.insights['best_score'] += bonus + (duration - sum([sim.streets[s].travel_time for s in list(v.streets)[1:]]))
     sim.setup(_out).run()
     # add some insights
     s.insights['bonus'] = bonus
@@ -93,7 +95,7 @@ def compute_score(file_in, file_out):
     s.insights['green_phases'] = 0
     s.insights['green_phase_sum'] = 0
     for v in sim.cars:
-        # add score, if car succeded
+        # add score, if car succeeded
         if v.is_complete():
             if s.insights['first_car'] is None or s.insights['first_car'].travel_time > v.travel_time:
                 s.insights['first_car'] = v
@@ -102,6 +104,15 @@ def compute_score(file_in, file_out):
             s.insights['before_deadline'] += 1
             s.insights['sum_travel_times'] += v.travel_time
             s.add(bonus, (duration - v.travel_time))
+    # replace cars, add streets lengths
+    first_car = copy.copy(cars[s.insights['first_car'].id])
+    first_car.travel_time = s.insights['first_car'].travel_time
+    first_car.streets = [(streets[s].id, streets[s].name, streets[s].travel_time) for s in first_car.streets]
+    s.insights['first_car'] = first_car
+    last_car = copy.copy(cars[s.insights['last_car'].id])
+    last_car.travel_time = s.insights['last_car'].travel_time
+    last_car.streets = [(streets[s].id, streets[s].name, streets[s].travel_time) for s in last_car.streets]
+    s.insights['last_car'] = last_car
     # add more insights
     for i in sim.intersections:
         if i.schedule is None:

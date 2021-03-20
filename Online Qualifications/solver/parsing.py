@@ -1,4 +1,5 @@
 import logging
+from collections import deque
 
 from .street import Street
 from .car import Car
@@ -18,37 +19,36 @@ def parse_input(file_in):
     LOGGER.info("Parsing file '{}'".format(file_in))
     streets = {}
     cars = []
-    intersections = None
+    intersections = []
     with open(file_in, 'r') as fp:
         # read META data
-        d, i, s, v, f = list(map(int, list(fp.readline().strip().split(" "))))
-        intersections = [Intersection(idx) for idx in range(i)]
-
+        d, i, s, v, f = list(map(int, list(fp.readline().strip().split())))
+        # create "empty" intersections
+        intersections.extend(Intersection(idx) for idx in range(i))
+        del i  # clean up
         # read all STREETS
         for street_id in range(s):
-            l_ = fp.readline().strip().split(' ')
+            l_ = fp.readline().strip().split()
             b, e = list(map(int, l_[:2]))
-            name, l = l_[2], int(l_[3])
-            streets[name] = Street(street_id, b, e, name, l)
+            name, length = l_[2], int(l_[3])
+            streets[name] = Street(street_id, b, e, name, length)
             intersections[b].add_outgoing(streets[name])
             intersections[e].add_incoming(streets[name])
-
         assert len(streets) == s
-
+        del name, length, b, e, s, street_id  # clean up
         # read all CARS
         for car_id in range(v):
-            l_ = fp.readline().strip().split(' ')
-            p = int(l_[0])
+            l_ = fp.readline().strip().split()
+            path_length = int(l_[0])
             names = l_[1:]
-            assert p == len(names)
-            cars.append(Car(car_id, names))
-            starting_street = names[0]
-            streets[starting_street].starting_cars += 1
-
+            assert path_length == len(names)
+            assert path_length >= 2  # a path consists of at least two streets
+            cars.append(Car(car_id, deque(names)))
+            # do some statistics
+            streets[names[0]].starting_cars += 1
         assert len(cars) == v
 
-    LOGGER.info(f"Data set with duration {d}, intersections {i}, streets {s}, cars {v} and bonus points {f}.")
-    LOGGER.info(f"Read {len(cars)} cars and {len(streets)} streets.")
+    LOGGER.debug(f"Data set with duration {d}, intersections {len(intersections)}, streets {len(streets)}, cars {len(cars)} and bonus points {f}.")
     LOGGER.info("Parsing '{}' - Done!".format(file_in))
     return (d, f), streets, cars, intersections
 
