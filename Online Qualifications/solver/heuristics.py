@@ -21,7 +21,7 @@ class Heuristics(BaseSolver):
         """
         self.solution = []
         (d, f), streets, cars, intersections = self.data
-        # naive thing: intersections with only one in and one out can be 'green' all the time
+        # naive thing: intersections with only one in can be 'green' all the time
         for intersection in intersections:
             if len(intersection.incoming) == 1:
                 # always on!
@@ -31,8 +31,7 @@ class Heuristics(BaseSolver):
                     [(1, name) for name in intersection.incoming]
                 )
                 self.solution.append(intersection.schedule)
-                # simplify map by joining both streets?
-                pass
+
         LOGGER.info(f"{len(self.solution)} / {len(intersections)}"
                     f" ({len(self.solution) * 100.0 / len(intersections):.2f}%) intersections are useless.")
 
