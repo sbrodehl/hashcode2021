@@ -37,7 +37,7 @@ class Heuristics(BaseSolver):
 
         # add heuristic for streets regarding visits
         for car in cars:
-            for street in car.streets:  # TODO: revisit this
+            for street in list(car.streets)[1:]:
                 streets[street].visits += 1
             streets[car.streets[0]].starting_cars += 1
         empty_streets = 0
@@ -52,7 +52,7 @@ class Heuristics(BaseSolver):
             # skip intersections with schedules
             if intersection.schedule is not None:
                 continue
-            visits = {name: streets[name].visits for name in intersection.incoming if streets[name].visits > 0}
+            visits = {name: streets[name].visits + streets[name].starting_cars for name in intersection.incoming if streets[name].visits + streets[name].starting_cars > 0}
             duration = {k: int(d * v / sum(visits.values())) for k, v in visits.items()}
             duration = {k: int(v / min(duration.values())) for k, v in duration.items()}
             duration = dict(sorted(duration.items(), key=lambda item: item[1] * streets[item[0]].starting_cars, reverse=True))
