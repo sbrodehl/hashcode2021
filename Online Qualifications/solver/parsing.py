@@ -71,7 +71,7 @@ def parse_output(file_out):
                 street_name, duration = f.readline().strip().split()
                 order.append((int(duration), street_name))
                 covered_streets.append(street_name)
-            solution.append(Schedule(intersection_id, covered_streets, order))
+            solution.append(Schedule(intersection_id, order))
 
     LOGGER.info("Parsing '{}' - Done!".format(file_out))
     return solution
@@ -83,7 +83,7 @@ def write_output(file_out, solution: list[Schedule]):
         f.write("{}\n".format(str(len(solution))))
         for s in solution:
             f.write(f"{s.intersection_id}\n")
-            f.write(f"{len(s.streets_covered)}\n")
+            f.write(f"{len(s.order)}\n")
             for sec, street_name in s.order:
                 f.write(f"{street_name} {sec}\n")
     LOGGER.debug("Writing solution '{}' - Done!".format(file_out))

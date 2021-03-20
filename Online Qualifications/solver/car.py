@@ -10,8 +10,6 @@ class Car:
     """Class representing a car with its path."""
     id: int
     streets: deque[Union[Street, str]]
-    waiting: bool = False
-    waiting_at: str = None
     travel_time: int = 0
 
     def is_complete(self) -> bool:

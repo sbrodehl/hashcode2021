@@ -5,7 +5,6 @@ from dataclasses import dataclass, field
 class Schedule:
     """Class representing a street with intersections and travel time."""
     intersection_id: int
-    streets_covered: list
     order: list
     step: int = -1
     green: str = None

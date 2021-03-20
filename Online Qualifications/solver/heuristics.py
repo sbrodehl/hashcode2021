@@ -27,7 +27,6 @@ class Heuristics(BaseSolver):
                 # always on!
                 intersection.schedule = Schedule(
                     intersection.id,
-                    intersection.incoming,
                     [(1, name) for name in intersection.incoming]
                 )
                 self.solution.append(intersection.schedule)
@@ -61,7 +60,6 @@ class Heuristics(BaseSolver):
             if len(duration) > 0:
                 intersection.schedule = Schedule(
                     intersection.id,
-                    list(duration.keys()),
                     [(duration[name], name) for name in duration]
                 )
                 self.solution.append(intersection.schedule)

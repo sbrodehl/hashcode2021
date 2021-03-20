@@ -27,7 +27,6 @@ class Example(BaseSolver):
                 # always on!
                 self.solution.append(Schedule(
                     intersection.id,
-                    intersection.incoming,
                     [(1, name) for name in intersection.incoming]
                 ))
                 intersection.has_schedule = True
@@ -39,7 +38,6 @@ class Example(BaseSolver):
                 continue
             self.solution.append(Schedule(
                 intersection.id,
-                intersection.incoming,
                 [(1, name) for name in intersection.incoming]
             ))
         return True

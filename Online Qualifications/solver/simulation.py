@@ -37,8 +37,6 @@ class Simulation:
             s_name = c.streets.popleft()
             self.streets[s_name].waiting.append(c)
             self.intersections[self.streets[s_name].end_intersection].waiting += 1
-            c.waiting = True
-            c.waiting_at = s_name
             # gather statistics
             self.streets[s_name].starting_cars += 1
             for s_name in c.streets:
@@ -85,9 +83,15 @@ class Simulation:
         self.update_intersections()
         self.update_streets()
         # check loop updates
-        self._intersections_updates.difference_update(set(i for i in self._intersections_updates_check if self.intersections[i].waiting == 0))
-        self._intersections_updates.update(set(i for i in self._intersections_updates_check if self.intersections[i].waiting != 0))
-        self._streets_updates.difference_update(self._streets_updates_removal)
+        self._intersections_updates.difference_update(
+            set(i for i in self._intersections_updates_check if self.intersections[i].waiting == 0)
+        )
+        self._intersections_updates.update(
+            set(i for i in self._intersections_updates_check if self.intersections[i].waiting != 0)
+        )
+        self._streets_updates.difference_update(
+            self._streets_updates_removal
+        )
         self._intersections_updates_check.clear()
         self._streets_updates_removal.clear()
 
@@ -118,8 +122,6 @@ class Simulation:
         s = self.streets[s]  # id -> object
         s.driving[v.id] = s.travel_time
         self._streets_updates.add(s.name)
-        v.waiting_at = None
-        v.waiting = False
 
     def update_streets(self):
         # move cars one step ahead
@@ -131,11 +133,11 @@ class Simulation:
         del_v = []
         # update travel time of vehicles
         for v in s.driving:
-            tt = s.driving[v] - 1
+            travel_time = s.driving[v] - 1
             # check if this changes status of vehicle
-            if tt < 0:
+            if travel_time < 0:
                 raise RuntimeError("Travel time of a vehicle can't be negative!")
-            if tt == 0:
+            if travel_time == 0:
                 # reached end of the street, either
                 #  - place vehicle in the waiting line for the intersection
                 #  - remove vehicle, since it reached destination
@@ -147,14 +149,12 @@ class Simulation:
                 else:
                     # place at intersection
                     s.waiting.append(v)
-                    v.waiting = True
-                    v.waiting_at = s.name
                     self._intersections_updates.add(s.end_intersection)
                     if self.intersections[s.end_intersection].waiting == 0:
                         self._intersections_updates_check.add(s.end_intersection)
                     self.intersections[s.end_intersection].waiting += 1
             else:  # nothing happens
-                s.driving[v] = tt
+                s.driving[v] = travel_time
 
         # remove from street
         for v in del_v:
