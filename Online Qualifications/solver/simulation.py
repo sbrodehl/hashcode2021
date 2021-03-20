@@ -1,9 +1,14 @@
-from typing import List, Dict
+from typing import List, Dict, Set
+import time
+import logging
 
 from .street import Street
 from .car import Car
 from .intersection import Intersection
 from .schedule import Schedule
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Simulation:
@@ -15,6 +20,10 @@ class Simulation:
         self.cars: List[Car] = cars
         self.intersections: List[Intersection] = intersections
         self.schedules: List[Schedule] = []
+        self._intersections_updates: Set[int] = set()
+        self._schedules_updates: Set[int] = set()
+        self._streets_updates: Set[str] = set()
+        self._timer = time.CLOCK_THREAD_CPUTIME_ID
 
     def setup(self, schedules):
         self.schedules = schedules
@@ -27,23 +36,58 @@ class Simulation:
             self.streets[s_name].waiting.append(c)
             c.waiting = True
             c.waiting_at = s_name
+            # gather statistics
+            self.streets[s_name].starting_cars += 1
+            self.streets[s_name].visits += 1
+            for s_name in c.streets:
+                self.streets[s_name].visits += 1
+        # remove useless intersections and unused streets from simulation
+        # keep track of active vehicles / streets / intersections
+        self._schedules_updates = set(
+            i.id
+            for i in self.intersections
+            if i.schedule is not None and len(i.schedule.order) > 1
+        )
+        self._intersections_updates = set(
+            i.id
+            for i in self.intersections
+            if any([self.streets[s].visits for s in i.incoming]) and i.schedule is not None
+        )
+        self._streets_updates = set(
+            sid
+            for sid, s in self.streets.items()
+            if s.visits > 0
+        )
         return self
 
     def run(self, duration: int = None):
         duration = duration if duration is not None else self.duration
+        start = time.clock_gettime(self._timer)
+        # set 'static' intersections
+        for iidx in set(s.intersection_id for s in self.schedules).difference(self._schedules_updates):
+            self.intersections[iidx].schedule.tick()
+
+        # run steps of the simulation
         for t in range(duration):
             self.step += 1
             self.tick()
+
+        LOGGER.info(
+            f"{self.__class__.__name__}::run "
+            f"{time.clock_gettime(self._timer) - start:.5f}s"
+        )
         return self
 
     def tick(self):
         # update lights per intersection
-        for i in self.intersections:
+        for iidx in self._schedules_updates:
+            i = self.intersections[iidx]
             if i.schedule is not None:
                 i.schedule.tick()
 
         # move cars over intersection
-        for i in self.intersections:
+        for iidx in self._intersections_updates:
+            i = self.intersections[iidx]
             # continue, if no schedule available
             if i.schedule is None:
                 continue
@@ -59,8 +103,8 @@ class Simulation:
             v.waiting = False
 
         # move cars one step ahead
-        for sid in self.streets:
-            s = self.streets[sid]
+        for s in self._streets_updates:
+            s = self.streets[s]  # id -> object
             # update travel time of vehicles
             for v in list(s.driving.keys()):
                 tt = s.driving[v] - 1
