@@ -44,8 +44,6 @@ def parse_input(file_in):
             assert path_length == len(names)
             assert path_length >= 2  # a path consists of at least two streets
             cars.append(Car(car_id, deque(names)))
-            # do some statistics
-            streets[names[0]].starting_cars += 1
         assert len(cars) == v
 
     LOGGER.debug(f"Data set with duration {d}, intersections {len(intersections)}, streets {len(streets)}, cars {len(cars)} and bonus points {f}.")

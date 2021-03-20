@@ -39,6 +39,7 @@ class Heuristics(BaseSolver):
         for car in cars:
             for street in car.streets:
                 streets[street].visits += 1
+            streets[car.streets[0]].starting_cars += 1
         empty_streets = 0
         for street in streets:
             if streets[street].visits == 0:
