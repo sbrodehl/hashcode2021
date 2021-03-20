@@ -96,54 +96,62 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+<nav class="navbar navbar-expand-md navbar-light static-top bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="../../icon.png" width="30px" height="30px" class="d-inline-block align-top" alt="">
-        Traffic Signaling
-      </a>
-      
-      <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
-            <select id="page_problem_selector" class="form-select" aria-label="Select problem data set">
-                <option value="a_an_example">A "An Example"</option>
-                <option value="b_by_the_ocean">B "By The Ocean"</option>
-                <option value="c_checkmate">C "Checkmate"</option>
-                <option disabled value="d_daily_commute">D "Daily Commute"</option>
-                <option value="e_etoile">E "Etoile"</option>
-                <option disabled value="f_forever_jammed">F "Forever Jammed"</option>
-            </select>
+        <a class="navbar-brand" href="#">
+            <img src="../../icon.png" width="30px" height="30px" class="d-inline-block align-top" alt="">
+            Traffic Signaling
+        </a>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <select id="page_problem_selector" class="form-select" aria-label="Select problem data set">
+                    <option value="a_an_example">A "An Example"</option>
+                    <option value="b_by_the_ocean">B "By The Ocean"</option>
+                    <option value="c_checkmate">C "Checkmate"</option>
+                    <option disabled value="d_daily_commute">D "Daily Commute"</option>
+                    <option value="e_etoile">E "Etoile"</option>
+                    <option disabled value="f_forever_jammed">F "Forever Jammed"</option>
+                </select>
+            </div>
         </div>
-        <div class="btn-group me-2">
-            <button type="button" class="btn btn-primary btn-sm" id="sim_start"><i class="bi bi-play-fill"></i>&nbsp;Start</button>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-primary btn-sm" id="sim_start"><i class="bi bi-play-fill"><i class="bi bi-pause-fill"></i></i>&nbsp;Start&nbsp;/&nbsp;Pause</button>
+            </div>
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-success btn-sm" id="sim_forward"><i class="bi bi-skip-forward-fill"></i>&nbsp;Step</button>
+            </div>
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-danger btn-sm" id="sim_reset"><i class="bi bi-x-square-fill"></i>&nbsp;Reset</button>
+            </div>
         </div>
-        <div class="btn-group me-2">
-            <button type="button" class="btn btn-secondary btn-sm" id="sim_pause"><i class="bi bi-pause-fill"></i>&nbsp;Pause</button>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <span class="navbar-text">
+                Step <span id="sim-step">0</span> / <span id="sim-duration">0</span>
+            </span>
         </div>
-        <div class="btn-group me-2">
-            <button type="button" class="btn btn-primary btn-sm" id="sim_forward"><i class="bi bi-skip-forward-fill"></i>&nbsp;Forward</button>
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#uploadCenter"><i class="bi bi-upload"></i>&nbsp;Upload</button>
+            </div>
         </div>
-        <div class="btn-group me-2">
-            <button type="button" class="btn btn-dark btn-sm" id="sim_center"><i class="bi bi-arrows-fullscreen"></i>&nbsp;Recenter Map</button>
-        </div>
-        <div class="btn-group me-2">
-            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#uploadCenter"><i class="bi bi-upload"></i>&nbsp;Upload</button>
-        </div>
-      </div>
     </div>
 </nav>
 
-<div style="position: fixed; bottom: 0px; right: 0px; padding: 5px;">
-    Street Colors:
-    <div><span class="box" style="background:#64d66a"></span>&nbsp;Empty</div>
-    <div><span class="box" style="background:#fe9346"></span>&nbsp;1 car</div>
-    <div><span class="box" style="background:#f03c32"></span>&nbsp;2-4 cars</div>
-    <div><span class="box" style="background:#861a19"></span>&nbsp;≥ 5 cars</div>
+<div style="position: fixed; bottom: 0px; right: 0px; padding: 5px; text-align: right;">
+    <b>Street Colors</b>
+    <div>Empty&nbsp;<span class="box" style="background:#64d66a"></span></div>
+    <div>1 car&nbsp;<span class="box" style="background:#fe9346"></span></div>
+    <div>2-4 cars&nbsp;<span class="box" style="background:#f03c32"></span></div>
+    <div>≥ 5 cars&nbsp;<span class="box" style="background:#861a19"></span></div>
 </div>
 
 <div style="position: fixed; bottom: 0px; left: 0px; padding: 5px;">
-    Legend:
-    <ul>
+    <b>Legend</b>
+    <ul style="margin-bottom: 0; padding-inline-start: 20px;">
         <li>Drag to move the map</li>
         <li>Scroll to zoom in/out</li>
         <li>Hover over the intersection to see details</li>
@@ -162,11 +170,11 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="uploadCenterLabel">Upload Submission Files</h5>
+          <h5 class="modal-title" id="uploadCenterLabel">Upload Submission File</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            Select Your Problem Data Set
+            Select Problem Data Set
             <select id="modal_problem_selector" class="form-select" aria-label="Select problem data set">
                 <option value="a_an_example">A "An Example"</option>
                 <option value="b_by_the_ocean">B "By The Ocean"</option>
@@ -179,12 +187,11 @@
         <div class="modal-body">
             <form method="post" action="#" id="#">
                 <div class="form-group files">
-                    <label>Upload Your Solution File</label>
+                    <label>Upload Submission File</label>
                     <input type="file" class="form-control" multiple="">
                 </div>
             </form>
         </div>
-        <div class="modal-footer"></div>
       </div>
     </div>
   </div>
@@ -244,6 +251,11 @@
         var svg_height = Math.floor(svg.node().getBoundingClientRect().height);
 
         $("#svg").attr("viewBox", "0 0 " + svg_width + " " + svg_height);
+
+        // set simulation duration
+        $("#sim-duration").text(data.d)
+        // reset simulation step
+        $("#sim-step").text(0)
 
         var color = d3.scale.category20();
 
