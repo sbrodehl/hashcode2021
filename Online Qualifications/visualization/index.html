@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Visualization | Traffic Signaling </title>
-    <script src="https://d3js.org/d3.v2.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
@@ -32,18 +32,6 @@
             height: 20px;
             vertical-align: text-bottom;
             width: 20px;
-        }
-
-        /* D3 */
-        #svg .background {
-            fill: none;
-            pointer-events: all;
-        }
-
-        #svg .link {
-            stroke: #999;
-            stroke-opacity: .6;
-            stroke-width: 1.5px;
         }
     </style>
     <style>
@@ -159,10 +147,7 @@
 </div>
 
 <div class="row" style="margin-right: auto; margin-left: auto;">
-    <svg id="svg"
-         viewBox="0 0 100 100"
-    >
-    </svg>
+    <svg id="svg"viewBox="0 0 100 100"></svg>
 </div>
 
 <!-- Modal -->
@@ -204,14 +189,16 @@
         w = $(window).width() * 0.96;
         h = $(window).height();
         h = h - $("#nav").outerHeight();
-        h = h * 0.96;
         h = Math.floor(h);
         w = Math.floor(w);
         container.css( "height", h + 'px' );
         container.css( "width", w + 'px' );
     }).trigger("resize");
 
-    var svg;
+    var svg = d3.select("svg");
+    //add zoom capabilities 
+    var zoom_handler = d3.zoom().on("zoom", zoom_actions);
+    var g, link, node;
     var visualization;
     var problem_set;
     var problem_set_pos;
@@ -234,7 +221,6 @@
             }
         });
         $("#svg").html(""); // reset svg content
-        svg = d3.select("svg");
         visualization = new Visualization(svg, problem_set, problem_set_pos);
     };
 
@@ -246,41 +232,30 @@
         visualize($(this).val());
     });
 
+    svg.on("click", function() {
+        // do something
+    });
+
     var Visualization = function (svg, data, positions) {
         var svg_width = Math.floor(svg.node().getBoundingClientRect().width);
         var svg_height = Math.floor(svg.node().getBoundingClientRect().height);
+        var n_nodes = data.i.length;
 
         $("#svg").attr("viewBox", "0 0 " + svg_width + " " + svg_height);
+        svg.attr("width", svg_width).attr("height", svg_height);
 
+        //add encompassing group for the zoom 
+        g = svg.append("g").attr("class", "everything");
         // set simulation duration
         $("#sim-duration").text(data.d)
         // reset simulation step
         $("#sim-step").text(0)
 
-        var color = d3.scale.category20();
-
-        var force = d3.layout.force()
-            .gravity(0)
-            .charge(-10)
-            .size([svg_width, svg_height]);
-
-        svg.attr("width", svg_width).attr("height", svg_height);
-        svg.append("rect").attr("class", "background")
-            .attr("width", svg_width).attr("height", svg_height);
-
-        var n_nodes = data.i.length
-        force.nodes(data.i).links(data.s);
-
         // Initialize the positions deterministically, with given positions.
         data.i.forEach(function(d, i) {
             d.x = svg_width * positions[i + 1][0] / positions[0][0];
             d.y = svg_height * positions[i + 1][1] / positions[0][1];
-            d.fixed = true;
         });
-        
-        // Enable things
-        force.start();
-        force.stop();
         
         // Center the nodes in the middle.
         var ox = 0, oy = 0;
@@ -288,26 +263,39 @@
         ox = ox / n_nodes - svg_width / 2, oy = oy / n_nodes - svg_height / 2;
         data.i.forEach(function(d) { d.x -= ox, d.y -= oy; });
 
-        var link = svg.selectAll(".link").data(data.s)
+        link = g.append("g")
+            .attr("class", "links")
+          .selectAll("line")
+          .data(data.s)
           .enter().append("line")
             .attr("class", "link")
             .attr("link-id", function(d) { return d.id; })
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; })
-            .style("stroke-width", "1.0");
+            .attr("x2", function(d) { return data.i[d.source].x; })
+            .attr("y2", function(d) { return data.i[d.source].y; })
+            .attr("x1", function(d) { return data.i[d.target].x; })
+            .attr("y1", function(d) { return data.i[d.target].y; })
+            .attr("fill", "none")
+            .attr("stroke", "black");
 
-        var node = svg.selectAll(".node").data(data.i)
+        node = g.append("g")
+           .attr("class", "nodes") 
+          .selectAll("circle").data(data.i)
           .enter().append("circle")
             .attr("class", "node")
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
             .attr("node-id", function(d) { return d.id; })
             .attr("r", 2.0)
-            .style("fill", function(d) { return "#0d6efd"; })
-            .call(force.drag);
+            .attr("fill", function(d) { return "#0d6efd"; });
+
+        zoom_handler(svg);
+
     };
+
+    //Zoom functions 
+    function zoom_actions(){
+        g.attr("transform", d3.event.transform)
+    }
 
     function previewfile(file) {
         var reader = new FileReader();
@@ -340,20 +328,7 @@
         };
         reader.readAsText(file);
     }
-/*
-    if (tests.dnd) {
-        holder.ondrop = function (e) {
-            this.className = '';
-            e.preventDefault();
-            readfiles(e.dataTransfer.files);
-        }
-    } else {
-        fileupload.className = 'hidden';
-        fileupload.querySelector('input').onchange = function () {
-            readfiles(this.files);
-        };
-    }
-*/
+
 </script>
 </body>
 </html>
