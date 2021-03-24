@@ -60,6 +60,13 @@ The theoretical upper bound of total points (assuming there are no waiting times
 
 See the [complete scoreboard](hashcode_2021_online_qualifications_scoreboard.zip) for the Online Qualifications.
 
+### Visualization
+
+A reimplementation (work-in-progess) of the visualization is available in the [visualization](visualization) directory.
+A running webserver is needed.
+
+![](visualization_b_by_the_ocean.png)
+
 #### A – An example
 
 > The submission scored **2,002 points**.
