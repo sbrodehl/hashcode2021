@@ -156,4 +156,14 @@ A running webserver is needed.
 > The schedules for the 8,000 intersections had an average total cycle length of 6.77 seconds.
 > A traffic light that turned green was scheduled to stay green for 1.00 seconds on average.
 
+## Judge System Insights Inconsistency
+
+During the competition the judge system showed the _insights_ of the submission as shown in
+Section [Scores & Insights](#scores--insights) and the example image.
+![](hashcodejudge_b_by_the_ocean_insights.png)
+
+However, the information shown about the _earliest car_ seems to be incorrect, as our reimplementation shows.  
+When asked on the subject, the Hash Code team assured the problem is correct as written,
+but did not comment on the correctness of the _insights_.
+
 [problem-statement]: hashcode_2021_online_qualifications.pdf
