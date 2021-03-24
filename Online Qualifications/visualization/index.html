@@ -146,7 +146,7 @@
     </ul>
 </div>
 
-<div class="row" style="margin-right: auto; margin-left: auto;">
+<div>
     <svg id="svg"viewBox="0 0 100 100"></svg>
 </div>
 
@@ -184,15 +184,15 @@
 <script>
 
     $(window).on("resize", function() {
-        // avoid scrollbars, scale (arbitrary) to 96%.
+        // avoid scrollbars
         container = $("#svg").parent();
-        w = $(window).width() * 0.96;
+        w = $(window).width();
         h = $(window).height();
         h = h - $("#nav").outerHeight();
         h = Math.floor(h);
         w = Math.floor(w);
-        container.css( "height", h + 'px' );
-        container.css( "width", w + 'px' );
+        // container.css( "height", h + 'px' );
+        // container.css( "width", w + 'px' );
     }).trigger("resize");
 
     var svg = d3.select("svg");
@@ -237,12 +237,11 @@
     });
 
     var Visualization = function (svg, data, positions) {
-        var svg_width = Math.floor(svg.node().getBoundingClientRect().width);
-        var svg_height = Math.floor(svg.node().getBoundingClientRect().height);
-        var n_nodes = data.i.length;
+        const svg_width = positions[0][0];
+        const svg_height = positions[0][1];
+        const n_nodes = data.i.length;
 
         $("#svg").attr("viewBox", "0 0 " + svg_width + " " + svg_height);
-        svg.attr("width", svg_width).attr("height", svg_height);
 
         //add encompassing group for the zoom 
         g = svg.append("g").attr("class", "everything");
@@ -259,9 +258,19 @@
         
         // Center the nodes in the middle.
         var ox = 0, oy = 0;
-        data.i.forEach(function(d) { ox += d.x, oy += d.y; });
+        var max_h = 0, min_h = svg_height, max_w = 0, min_w = svg_width;
+        data.i.forEach(function(d) {
+            ox += d.x, oy += d.y;
+            if (d.x > max_w) max_w = d.x;
+            if (d.x < min_w) min_w = d.x;
+            if (d.y > max_h) max_h = d.y;
+            if (d.y < min_h) min_h = d.y;
+        });
+        max_w = Math.floor(1.1 * max_w);
+        max_h = Math.floor(1.1 * max_h);
         ox = ox / n_nodes - svg_width / 2, oy = oy / n_nodes - svg_height / 2;
         data.i.forEach(function(d) { d.x -= ox, d.y -= oy; });
+        $("#svg").attr("viewBox", "0 0 " + max_w + " " + max_h);
 
         link = g.append("g")
             .attr("class", "links")
