@@ -32,6 +32,9 @@ Hash Code 2021 Online Qualifications Livestream
 
 #### Scoring
 
+Cars which arrive before the deadline score _Bonus Points_ (depending on of the problem set)
+and additionally one point for each second left of the simulation.
+
 See the section on scoring in the [Problem statement for the Online Qualifications of Hash Code 2021][problem-statement] for more details.
 
 #### Input
